@@ -62,7 +62,7 @@ tuiutil:spinner() {
 
 tuiutil:text() {
     case "${1}" in
-        [cC][eE][nN][tT][eE][rR]-[pP][aA][dD][dD][iI][nN][gG]|--[cC][eE][nN][tT][eE][rR]|-[cC][pP])
+        [cC][eE][nN][tT][eE][rR]-[pP][aA][dD][dD][iI][nN][gG]|--[cC][eE][nN][tT][eE][rR]-[pP][aA][dD][dD][iI][nN][gG]|-[cC][pP])
             local terminalwidth="$(tput cols)"
             [[ -z ${2} ]] && local text="*" || local text="${2}"
             [[ -z ${3} ]] && local setchar="=" || local setchar="${3}"

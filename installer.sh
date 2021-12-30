@@ -23,8 +23,12 @@ case "${1}" in
     [iI][nN][sS][tT][aA][lL][lL]|--[iI][nN][sS][tT][aA][lL][lL]|-[iI])
         mkdir -p /usr/share/hera/lib /usr/share/hera/repositories /usr/share/licenses/hera /usr/share/doc/hera
         install -m 755 ./lib/*.sh /usr/share/hera/lib
+        cp ./repositories.yaml /usr/share/hera
         install -m 755 ./init.sh /usr/share/hera
         install -m 755 ./hera.sh /usr/bin/hera
+        cd "/usr/share/hera"
+        . ./lib/btb.sh
+        btb:generate --bank "packages"
         chown "${user}:${group}" /usr/share/hera/*
         chown "${user}:${group}" /usr/bin/hera
     ;;
@@ -35,8 +39,12 @@ case "${1}" in
         rm -rf /usr/share/hera /usr/share/licenses/hera /usr/share/doc/hera /usr/bin/hera
         mkdir -p /usr/share/hera/lib /usr/share/hera/repositories /usr/share/licenses/hera /usr/share/doc/hera
         install -m 755 ./lib/*.sh /usr/share/hera/lib
+        cp ./repositories.yaml /usr/share/hera
         install -m 755 ./init.sh /usr/share/hera
         install -m 755 ./hera.sh /usr/bin/hera
+        cd "/usr/share/hera"
+        . ./lib/btb.sh
+        btb:generate --bank "packages"
         chown "${user}:${group}" /usr/share/hera/*
         chown "${user}:${group}" /usr/bin/hera
     ;;

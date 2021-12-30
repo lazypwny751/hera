@@ -1,0 +1,6 @@
+# Add your repositories as array of 'repositories:'
+# Example:
+# - reponame|https://repoadress.x/repo
+
+repositories:
+  - pisagor|https://raw.githubusercontent.com/ByCh4n-Group/piasgor/main

@@ -6,8 +6,7 @@ banners:rabbit() {
     case "${1}" in
         [oO][nN][eE]|--[oO][nN][eE]|1)
             __randomcolor simple
-            echo -e "
-   /gg\           /gg\ 
+            echo -e "   /gg\           /gg\ 
   /g.gg\         /gg.g\ 
  |gg..gg\       /gg..gg| 
  |gg...g|       |g...gg| 
@@ -31,8 +30,7 @@ banners:hera() {
     case "${1}" in
         [cC][rR][aA][wW][fF][oO][rR][dD]2|--[cC][rR][aA][wW][fF][oO][rR][dD]2|-[cC][wW]2)
             [[ "${2}" = "rainbow" ]] && __randomcolor simple
-            echo -e "
- __ __    ___  ____    ____ 
+            echo -e " __ __    ___  ____    ____ 
 |  |  |  /  _]|    \  /    |
 |  |  | /  [_ |  D  )|  o  |
 |  _  ||    _]|    / |     |
@@ -43,8 +41,7 @@ ${reset}"
         ;;
         [fF][iI][rR][eE]|--[fF][iI][rR][eE]|-[fF])
             [[ "${2}" = "rainbow" ]] && __randomcolor simple
-            echo -e "   
-    )                   
+            echo -e "    )                   
  ( /(    (   (       )  
  )\())  ))\  )(   ( /(  
 ((_)\  /((_)(()\  )(_)) 
@@ -55,8 +52,7 @@ ${reset}"
         ;;
         [gG][rR][aA][fF][fF][iI][tT][iI]|--[gG][rR][aA][fF][fF][iI][tT][iI]|-[gG])
             [[ "${2}" = "rainbow" ]] && __randomcolor simple
-            echo -e "
-.__                         
+            echo -e ".__                         
 |  |__   ________________   
 |  |  \_/ __ \_  __ \__  \  
 |   Y  \  ___/|  | \// __ \_
@@ -70,8 +66,7 @@ ${reset}"
 banners:anime() {
     case "${1}" in
         [pP][iI][kK][aA]|--[pP][iI][kK][aA]|-[pP])
-            echo -e "${yellow}
-⢀⣠⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀⣠⣤⣶⣶
+            echo -e "${yellow}⢀⣠⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠀⠀⠀⠀⣠⣤⣶⣶
 ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠀⠀⠀⢰⣿⣿⣿⣿
 ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣧⣀⣀⣾⣿⣿⣿⣿
 ⣿⣿⣿⣿⣿⡏⠉⠛⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⣿
@@ -88,8 +83,7 @@ banners:anime() {
 ${reset}"
         ;;
         [sS][aA][iI][tT][aA][mM][aA]|--[sS][aA][iI][tT][aA][mM][aA]|-[sS])
-            echo -e "
-⠀⠀⠀⠀⣠⣶⡾⠏⠉⠙⠳⢦⡀⠀⠀⠀⢠⠞⠉⠙⠲⡀⠀
+            echo -e "⠀⠀⠀⠀⣠⣶⡾⠏⠉⠙⠳⢦⡀⠀⠀⠀⢠⠞⠉⠙⠲⡀⠀
 ⠀⠀⠀⣴⠿⠏⠀⠀⠀⠀⠀⠀⢳⡀⠀⡏⠀⠀⠀⠀⠀⢷
 ⠀⠀⢠⣟⣋⡀⢀⣀⣀⡀⠀⣀⡀⣧⠀⢸⠀⠀⠀⠀⠀ ⡇
 ⠀⠀⢸⣯⡭⠁⠸⣛⣟⠆⡴⣻⡲⣿⠀⣸⠀⠀OK⠀ ⡇
@@ -105,8 +99,7 @@ ${reset}"
         ;;
         [cC][uU][tT][eE]|--[cC][uU][tT][eE]|-[cC])
             [[ "${2}" = "rainbow" ]] && __randomcolor simple
-            echo -e "
-░░░░█▐▄▒▒▒▌▌▒▒▌░▌▒▐▐▐▒▒▐▒▒▌▒▀▄▀▄░
+            echo -e "░░░░█▐▄▒▒▒▌▌▒▒▌░▌▒▐▐▐▒▒▐▒▒▌▒▀▄▀▄░
 ░░░█▐▒▒▀▀▌░▀▀▀░░▀▀▀░░▀▀▄▌▌▐▒▒▒▌▐░
 ░░▐▒▒▀▀▄▐░▀▀▄▄░░░░░░░░░░░▐▒▌▒▒▐░▌
 ░░▐▒▌▒▒▒▌░▄▄▄▄█▄░░░░░░░▄▄▄▐▐▄▄▀░░

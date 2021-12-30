@@ -70,7 +70,7 @@ _btbtmpm() {
         ;;
         [cC][lL][oO][sS][eE]|--[cC][lL][oO][sS][eE]|-[cC])
             if [[ -d "/tmp/${btb_name}" ]] ; then
-                [[ "${PWD}" = "/tmp/${btb_name}" ]] && cd "${btb_cwd}" || error "Could not closing so may it lose your current path please remove '/tmp/${btb_name}' manually" "1"
+                [[ "${PWD}" = "/tmp/${btb_name}" ]] && cd "${btb_cwd}" || _btbui error "Could not closing so may it lose your current path please remove '/tmp/${btb_name}' manually" "1"
                 rm -rf "/tmp/${btb_name}" || _btbui --fatal "${btb_name} could not removed"
             fi
         ;;
@@ -78,7 +78,7 @@ _btbtmpm() {
             if [[ -f "/tmp/${btb_name}/metafile" ]] ; then
                 cd "/tmp/${btb_name}" || return 1 # change directory to btb temp dir
                 . metafile # source the bank metadata file
-                tar -zcf "${btb_cwd}/${btb_bank}.${btb_file_extension}" ./* && _btbui --succsess "${btb_bank} compressed" || _btbui --error "the bank is can not compressing" "1"
+                tar -zcf "${2}/${btb_bank}.${btb_file_extension}" ./* || _btbui --error "the bank is can not compressing" "1"
                 rm -rf "/tmp/${btb_name}" # remove old dir
                 cd "${btb_cwd}" || return 1 # change directory to current working directory
             else
@@ -120,7 +120,7 @@ btb:generate() {
             [[ -z "${2}" ]] && btb_bank="artemis" || btb_bank="${2}"
             _btbtmpm --open
             echo "btb_bank='${btb_bank}'" > "/tmp/${btb_name}/metafile"
-            _btbtmpm --compress
+            _btbtmpm --compress "${btb_cwd}"
         ;;
         [bB][aA][sS][eE]|--[bB][aA][sS][eE]|-[bB])
             if [[ $(tar -ztf "${2}" | grep -w "metafile") ]] 2> /dev/null && [[ "${#}" -ge 3 ]] ; then
@@ -132,7 +132,7 @@ btb:generate() {
                         _btbui --info "${i} is already exist"
                     fi
                 done
-                _btbtmpm --compress
+                _btbtmpm --compress "$(dirname ${2})"
             else
                 if [[ "${#}" -lt 3 ]] ; then
                     _btbui --error "wrong argument usage" "1"
@@ -155,7 +155,7 @@ btb:generate() {
                 else
                     _btbui --error "The base ${3} is not exist"
                 fi
-                _btbtmpm --compress
+                _btbtmpm --compress "$(dirname ${2})"
             else
                 if [[ "${#}" -lt 4 ]] ; then
                     _btbui --error "wrong argument usage" "1"
@@ -207,7 +207,7 @@ btb:write() {
                 else
                     _btbui --error "The base ${3} is not exist"
                 fi
-                _btbtmpm --compress
+                _btbtmpm --compress "$(dirname ${2})"
             else
                 if [[ "${#}" -lt 4 ]] ; then
                     _btbui --error "wrong argument usage" "1"
@@ -228,7 +228,7 @@ btb:write() {
                 else
                     _btbui --error "The data ${4} is not exist"
                 fi
-                _btbtmpm --compress
+                _btbtmpm --compress "$(dirname ${2})"
             else
                 if [[ "${#}" -lt 4 ]] ; then
                     _btbui --error "wrong argument usage" "1"
@@ -268,7 +268,7 @@ btb:remove() {
                         _btbui --info "${i} is already removed"
                     fi
                 done
-                _btbtmpm --compress
+                _btbtmpm --compress "$(dirname ${2})"
             else
                 if [[ "${#}" -lt 4 ]] ; then
                     _btbui --error "wrong argument usage" "1"
@@ -291,7 +291,7 @@ btb:remove() {
                 else
                     _btbui --error "The base ${3} isn't exist" "1"
                 fi
-                _btbtmpm --compress
+                _btbtmpm --compress "$(dirname ${2})"
             else
                 if [[ "${#}" -lt 4 ]] ; then
                     _btbui --error "wrong argument usage" "1"
@@ -324,12 +324,12 @@ btb:check() {
             if [[ $(tar -ztf "${2}" | grep -w "metafile") ]] 2> /dev/null && [[ "${#}" -ge 3 ]] ; then
                 _btbtmpm --extract "${2}"
                 if [[ -d ./"${3}" ]] ; then
+                    _btbtmpm --close
                     return 0
                 else
                     _btbtmpm --close
                     return 1
                 fi
-                _btbtmpm --compress
             else
                 if [[ "${#}" -lt 4 ]] ; then
                     _btbui --error "wrong argument usage" "1"
@@ -342,12 +342,12 @@ btb:check() {
             if [[ $(tar -ztf "${2}" | grep -w "metafile") ]] 2> /dev/null && [[ "${#}" -ge 4 ]] ; then
                 _btbtmpm --extract "${2}"
                 if [[ -f ./"${3}/${4}" ]] ; then
+                    _btbtmpm --close
                     return 0
                 else
                     _btbtmpm --close
                     return 1
                 fi
-                _btbtmpm --compress
             else
                 if [[ "${#}" -lt 4 ]] ; then
                     _btbui --error "wrong argument usage" "1"
@@ -384,7 +384,7 @@ btb:print() {
                     _btbtmpm --close
                     return 1
                 fi
-                _btbtmpm --compress
+                _btbtmpm --compress "$(dirname ${2})"
             else
                 if [[ "${#}" -lt 4 ]] ; then
                     _btbui --error "wrong argument usage" "1"
@@ -412,8 +412,8 @@ btb:call_value() {
         [bB][aA][sS][eE]-[nN][uU][mM][bB][eE][rR]|--[bB][aA][sS][eE]-[nN][uU][mM][bB][eE][rR]|-[bB][nN])
             if [[ $(tar -ztf "${2}" | grep -w "metafile") ]] 2> /dev/null && [[ "${#}" -ge 2 ]] ; then
                 _btbtmpm --extract "${2}"
-                ls -d */ | wc -l
-                _btbtmpm --compress
+                ls -d */ | wc -l 2> /dev/null
+                _btbtmpm --compress "$(dirname ${2})"
             else
                 if [[ "${#}" -lt 3 ]] ; then
                     _btbui --error "wrong argument usage" "1"
@@ -431,7 +431,7 @@ btb:call_value() {
                     _btbtmpm --close
                     return 1
                 fi
-                _btbtmpm --compress
+                _btbtmpm --compress "$(dirname ${2})"
             else
                 if [[ "${#}" -lt 4 ]] ; then
                     _btbui --error "wrong argument usage" "1"
@@ -444,7 +444,7 @@ btb:call_value() {
             if [[ $(tar -ztf "${2}" | grep -w "metafile") ]] 2> /dev/null && [[ "${#}" -ge 2 ]] ; then
                 _btbtmpm --extract "${2}"
                 ls -d */
-                _btbtmpm --compress
+                _btbtmpm --compress "$(dirname ${2})"
             else
                 if [[ "${#}" -lt 3 ]] ; then
                     _btbui --error "wrong argument usage" "1"
@@ -462,7 +462,7 @@ btb:call_value() {
                     _btbtmpm --close
                     return 1
                 fi
-                _btbtmpm --compress
+                _btbtmpm --compress "$(dirname ${2})"
             else
                 if [[ "${#}" -lt 4 ]] ; then
                     _btbui --error "wrong argument usage" "1"
