@@ -64,7 +64,22 @@ install:package() {
 
 install:getpackage() {
     if [[ -d "${home}/${rep}" ]] ; then
-        
+        if [[ $(ls "${home}/${rep}") != 0 ]] ; then
+            for i in ls "${home}/${rep}" ; do
+                if [[ -f "${home}/${rep}/${i}/packages.yaml" ]] ; then
+                    yaml:parse2bash:3 "${home}/${rep}/${i}/packages.yaml"
+                    for x in $(yaml:parse2bash:3 "${home}/${cat}" | tr "=" " " | grep packages_* | awk '{print $1}' | tr -d '"') ; do
+                        if [[ "${x}" = "${1}" ]] ; then
+                            echo "${x} found in ${i}"
+                        fi
+                    done
+                else
+                    tuiutil:notices --error "${i} haven't packages.yaml file try"
+                fi
+            done
+        else
+            tuiutil:notices --error "you do not have a saved repository metadata please run '~$ hera --update'"
+        fi
     else
         tuiutil:notices --error "${home}/${rep} not found plese run '~# hera --fix'"
     fi
