@@ -63,7 +63,11 @@ install:package() {
 }
 
 install:getpackage() {
-    :
+    if [[ -d "${home}/${rep}" ]] ; then
+        
+    else
+        tuiutil:notices --error "${home}/${rep} not found plese run '~# hera --fix'"
+    fi
 }
 
 install:install() {
