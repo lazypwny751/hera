@@ -1,22 +1,21 @@
 #!/bin/bash
 
 # Define variables
-version="1.0.0"
-maintainer="ByCh4n-Group"
-license="GPLv3"
+export version="1.0.0"
+export maintainer="ByCh4n-Group"
+export license="GPLv3"
 
-cwd="${PWD}"
-user="${SUDO_USER:-$USER}"
-group=$(cat /etc/group | awk -F: '{ print $1}' | grep -w ${user} || echo "users")
+export cwd="${PWD}"
+export user="${SUDO_USER:-$USER}"
+export group=$(cat /etc/group | awk -F: '{ print $1}' | grep -w ${user} || echo "users")
 
-home="/usr/share/hera"
-temp="/tmp/hera"
-lib="${home}/lib"
-rep="${home}/repositories"
+export home="/usr/share/hera"
+export temp="/tmp/hera"
+export lib="${home}/lib"
+export rep="${home}/repositories"
 
-lock="${temp}/hera.pid"
-btb="packages.btb" # in home
-cat="repositories.yaml"
+export btb="packages.btb" # in home
+export cat="repositories.yaml"
 
 # Functions
 init:loadlibrary() {

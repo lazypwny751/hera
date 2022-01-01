@@ -31,9 +31,11 @@ case "${1}" in
         btb:generate --bank "packages"
         chown "${user}:${group}" /usr/share/hera/*
         chown "${user}:${group}" /usr/bin/hera
+        echo "installation completed"
     ;;
     [uU][nN][iI][nN][sS][tT][aA][lL][lL]|--[uU][nN][iI][nN][sS][tT][aA][lL][lL]|-[uU])
         rm -rf /usr/share/hera /usr/share/licenses/hera /usr/share/doc/hera /usr/bin/hera
+        echo "uninstallation completed"
     ;;
     [rR][eE][iI][nN][sS][tT][aA][lL][lL]|--[rR][eE][iI][nN][sS][tT][aA][lL][lL]|-[rR])
         rm -rf /usr/share/hera /usr/share/licenses/hera /usr/share/doc/hera /usr/bin/hera
@@ -47,5 +49,6 @@ case "${1}" in
         btb:generate --bank "packages"
         chown "${user}:${group}" /usr/share/hera/*
         chown "${user}:${group}" /usr/bin/hera
+        echo "reinstallation completed"
     ;;
 esac

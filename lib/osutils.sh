@@ -214,3 +214,11 @@ osutil:uninstall() {
         ;;
     esac
 }
+
+osutil:pip3() {
+    :
+}
+
+osutil:gem() {
+    :
+}

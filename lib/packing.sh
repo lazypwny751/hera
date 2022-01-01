@@ -43,8 +43,17 @@ packing:build() {
                                 fi
 
                                 if [[ -n "${opensuse_depends}" ]] ; then
-                                    tuiutil:notices --info "openSUSE dependencity: ${opensuse_depends} found"
+                                    tuiutil:notices --info "openSUSE dependencities found"
                                 fi
+                                
+                                if [[ -n "${python3}" ]] ; then
+                                    tuiutil:notices --info "python3 dependencities found"
+                                fi
+
+                                if [[ -n "${ruby}" ]] ; then
+                                    tuiutil:notices --info "ruby dependencities found"
+                                fi
+
                                 cd "${1}"
                                 tar -zcf "${cwd}/${package}-${version}.hera" ./* && tuiutil:notices --succsess "${package} builded as ${cwd}/${package}-${version}.hera"
                             else

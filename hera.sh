@@ -40,7 +40,7 @@ case "${1}" in
     [iI][nN][sS][tT][aA][lL][lL]|--[iI][nN][sS][tT][aA][lL][lL]|-[iI][nN])
         hera:managers --pid
         osutil:check --root || exit 1
-        osutil:check --trigger "base64" "tar" "make" || exit 1
+        osutil:check --trigger "base64" "wget" "tar" "make" || exit 1
         osutil:check --file "${home}/${btb}"
         init:loadlibrary "yamlparser" "btb" "install" #depresolv
         banners:anime --pika
@@ -48,8 +48,9 @@ case "${1}" in
             cd "${cwd}" || tuiutil:notices --error "could not changing directory"
             tuiutil:text --center "$(echo -ne "${BIblue}")Preparing for$(echo -ne "${reset}") '${@:X:1}'"
             hera:managers --temp "start"
-            install:package "${@:X:1}"
-            #install:install "${@:X:1}"
+            ## install:package "${@:X:1}"
+            ## install:getpackage "${@:X:1}"
+            install:install "${@:X:1}"
             hera:managers --temp "stop"
             tuiutil:text --center "$(echo -ne "${BIblue}")Finished$(echo -ne "${reset}") '${@:X:1}'"
             printf "\n"
@@ -80,7 +81,7 @@ case "${1}" in
         hera:managers --temp "stop"
     ;;
     [lL][iI][sS][tT]|--[lL][iI][sS][tT]|-[lL])
-        init:loadlibrary "btb" "list"
+        init:loadlibrary "btb" "list" "yamlparser"
         case "${2}" in
             [pP][aA][cC][kK][aA][gG][eE][sS]|--[pP][aA][cC][kK][aA][gG][eE][sS]|-[pP])
                 list:installedpkgs

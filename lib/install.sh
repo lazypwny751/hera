@@ -16,7 +16,7 @@ install:package() {
         local pisi_depends=""
         local opensuse_depends=""
 
-        cp "${1}" "${temp}"
+        cp "${1}" "${temp}" 2> /dev/null
         cd "${temp}"
         tar -xf "${1}" ./
         yaml:parse2bash:3 "package.yaml" > package.sh
@@ -63,18 +63,26 @@ install:package() {
 }
 
 install:getpackage() {
-    if [[ -d "${home}/${rep}" ]] ; then
-        if [[ $(ls "${home}/${rep}") != 0 ]] ; then
-            for i in ls "${home}/${rep}" ; do
-                if [[ -f "${home}/${rep}/${i}/packages.yaml" ]] ; then
-                    yaml:parse2bash:3 "${home}/${rep}/${i}/packages.yaml"
-                    for x in $(yaml:parse2bash:3 "${home}/${cat}" | tr "=" " " | grep packages_* | awk '{print $1}' | tr -d '"') ; do
+    local nothingfound="false"
+    export packagepath=""
+    if [[ -d "${rep}" ]] ; then
+        if [[ $(ls "${rep}" | wc -l) != 0 ]] ; then
+            for Y in $(ls "${rep}") ; do
+                if [[ -f "${rep}/${Y}/packages.yaml" ]] ; then
+                    for x in $(yaml:parse2bash:3 "${rep}/${Y}/packages.yaml" | tr "=" " " | tr "|" " " | grep packages_* | awk '{print $2}' | tr -d '"') ; do
                         if [[ "${x}" = "${1}" ]] ; then
-                            echo "${x} found in ${i}"
+                            tuiutil:notices --info "${x} found in ${Y} downloading package.."
+                            cd "${temp}"
+                            wget -q "$(cat "${home}/${cat}" | grep -w "${Y}" | tr "|" " " | awk '{print $3}')$(yaml:parse2bash:3 "${rep}/${Y}/packages.yaml" | tr "=" " " | tr "|" " " | grep packages_* | grep -w "${x}" | awk '{print $4}' | tr -d '"')"
+                            if [[ $? = 0 ]] ; then
+                                export packagepath="${temp}$(yaml:parse2bash:3 "${rep}/${Y}/packages.yaml" | tr "=" " " | tr "|" " " | grep packages_* | grep -w "${x}" | awk '{print $4}' | tr -d '"')"
+                            else
+                                export packagepath=""
+                            fi
                         fi
                     done
                 else
-                    tuiutil:notices --error "${i} haven't packages.yaml file try"
+                    tuiutil:notices --error "${rep}/${Y} haven't packages.yaml file try '~$ hera --update'"
                 fi
             done
         else
@@ -83,8 +91,21 @@ install:getpackage() {
     else
         tuiutil:notices --error "${home}/${rep} not found plese run '~# hera --fix'"
     fi
+
+    if [[ -z "${packagepath}" ]] ; then
+        tuiutil:notices --error "no match found for ${1} in repositories or can not getting the package in this time"
+    fi
 }
 
 install:install() {
-    :
-}
+    if [[ "${#}" -eq 1 ]] ; then
+        if [[ $(file ${1} | grep "gzip compressed data") ]] ; then
+            install:package "${1}"
+        else
+            install:getpackage "${1}"
+            if [[ -n "${packagepath}" ]] ; then
+                install:package "${packagepath}" || return 1
+            fi
+        fi 
+    fi
+}   

@@ -34,9 +34,26 @@ version:isgreater() {
 }
 
 hera:help() {
-    echo -e "$(alternative:filename ${BASH_SOURCE[-1]}) --build <dir1> <dir2>..:
+    echo -e "~$ $(alternative:filename ${BASH_SOURCE[-1]}) --build <dir1> <dir2>..:
+    generate hera packages.
 
-$(alternative:filename ${BASH_SOURCE[-1]}) --help:
+~$ $(alternative:filename ${BASH_SOURCE[-1]}) --help:
+    show this text.
+
+~# $(alternative:filename ${BASH_SOURCE[-1]}) --install <package1> <package2>..:
+    Install packages from repositories or on your system.
+
+~# $(alternative:filename ${BASH_SOURCE[-1]}) --uninstall <package1> <package2>..:
+    remove installed hera packages.
+
+~$ $(alternative:filename ${BASH_SOURCE[-1]}) --update:
+    update catalogs.
+
+~$ $(alternative:filename ${BASH_SOURCE[-1]}) --list -p/-r:
+    View packages installed with -p argument in repositories with -r.
+
+~# $(alternative:filename ${BASH_SOURCE[-1]}) --fix:
+    If hera constantly makes mistakes, use this argument.
 \033[0m"
 }
 
@@ -70,5 +87,34 @@ hera:managers() {
 }
 
 hera:fix() {
-    :
+    if [[ "${UID}" != 0 ]] ; then
+        echo "please run it with root privilages"
+        exit 1
+    fi
+
+    if [[ -d "${temp}" ]] ; then
+        rm -rf "${temp}"
+    fi
+
+    # btb dosyası var mı?
+    if [[ ! -f ""${home}/${btb}"" ]] ; then
+        :
+    fi
+
+    if [[ ! -f "${home}/${cat}" ]] ; then
+        echo -e "repositories:
+  - pisagor|https://raw.githubusercontent.com/ByCh4n-Group/pisagor/main
+" > "${home}/${cat}"
+    fi
+
+    if [[ -d "${rep}" ]] ; then
+        mkdir -p "${rep}"
+    fi
+
+    if [[ -d "${lib}" ]] ; then
+        mkdir -p "${lib}"
+    fi
+
+    chown "${user}:${group}" "${home}" "${home}"/* "${home}"/*/*
+    chmod +x "${lib}"/*
 }
