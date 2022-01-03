@@ -48,8 +48,6 @@ case "${1}" in
             cd "${cwd}" || tuiutil:notices --error "could not changing directory"
             tuiutil:text --center "$(echo -ne "${BIblue}")Preparing for$(echo -ne "${reset}") '${@:X:1}'"
             hera:managers --temp "start"
-            ## install:package "${@:X:1}"
-            ## install:getpackage "${@:X:1}"
             install:install "${@:X:1}"
             hera:managers --temp "stop"
             tuiutil:text --center "$(echo -ne "${BIblue}")Finished$(echo -ne "${reset}") '${@:X:1}'"

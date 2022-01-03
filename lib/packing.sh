@@ -26,31 +26,31 @@ packing:build() {
                                     tuiutil:notices --info "this package support ${is_arch} architecture machines"
                                 fi
 
-                                if [[ -n "${debian_depends}" ]] ; then
-                                    tuiutil:notices --info "debian dependencity: ${debian_depends} found"
+                                if [[ -n "${debian_depends_1}" ]] ; then
+                                    tuiutil:notices --info "debian dependencities found"
                                 fi
 
-                                if [[ -n "${arch_depends}" ]] ; then
-                                    tuiutil:notices --info "arch dependencity: ${arch_depends} found"
+                                if [[ -n "${arch_depends_1}" ]] ; then
+                                    tuiutil:notices --info "arch dependencities found"
                                 fi
 
-                                if [[ -n "${fedora_depends}" ]] ; then
-                                    tuiutil:notices --info "fedora dependencity: ${fedora_depends} found"
+                                if [[ -n "${fedora_depends_1}" ]] ; then
+                                    tuiutil:notices --info "fedora dependencities found"
                                 fi
 
-                                if [[ -n "${pisi_depends}" ]] ; then
-                                    tuiutil:notices --info "pisi dependencity: ${pisi_depends} found"
+                                if [[ -n "${pisi_depends_1}" ]] ; then
+                                    tuiutil:notices --info "pisi dependencities found"
                                 fi
 
-                                if [[ -n "${opensuse_depends}" ]] ; then
+                                if [[ -n "${opensuse_depends_1}" ]] ; then
                                     tuiutil:notices --info "openSUSE dependencities found"
                                 fi
                                 
-                                if [[ -n "${python3}" ]] ; then
+                                if [[ -n "${python3_1}" ]] ; then
                                     tuiutil:notices --info "python3 dependencities found"
                                 fi
 
-                                if [[ -n "${ruby}" ]] ; then
+                                if [[ -n "${ruby_1}" ]] ; then
                                     tuiutil:notices --info "ruby dependencities found"
                                 fi
 

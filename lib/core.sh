@@ -98,7 +98,9 @@ hera:fix() {
 
     # btb dosyası var mı?
     if [[ ! -f ""${home}/${btb}"" ]] ; then
-        :
+        cd "${home}"
+        . ./lib/btb.sh
+        btb:generate --bank "packages"
     fi
 
     if [[ ! -f "${home}/${cat}" ]] ; then

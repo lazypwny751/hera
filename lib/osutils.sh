@@ -189,8 +189,7 @@ osutil:install() {
         opensuse)
             zypper remove --no-confirm ${1}
         ;;
-    esac
-    
+    esac   
 }
 
 osutil:uninstall() {
@@ -216,9 +215,77 @@ osutil:uninstall() {
 }
 
 osutil:pip3() {
-    :
+    case "$(osutil:define --base)" in
+        debian)
+            if command -v pip3 2> /dev/null ; then
+                pip3 install -y ${1}
+            else
+                return 1
+            fi
+        ;;
+        arch)
+            if command -v pip 2> /dev/null ; then
+                pip install -y ${1}
+            else
+                return 1
+            fi
+        ;;
+        fedora)
+            if command -v pip3 2> /dev/null ; then
+                pip3 install -y ${1}
+            else
+                return 1
+            fi
+        ;;
+        pisi)
+            # Yetersiz kaynak olduğu için bu arkadaşı şu anlık desteklemiyoruz.
+            echo "sorry to say but we are not support pisi linux in this time."
+        ;;
+        opensuse)
+            # leap ağırlıklı lakin paket isimleri genelde aynı olur ileride ekleme gelecektir.
+            if command -v pip3 2> /dev/null ; then
+                pip3 install -y ${1}
+            else
+                return 1
+            fi
+        ;;
+    esac
 }
 
 osutil:gem() {
-    :
+    case "$(osutil:define --base)" in
+        debian)
+            if command -v gem 2> /dev/null ; then
+                gem install ${1}
+            else
+                return 1
+            fi
+        ;;
+        arch)
+            if command -v gem 2> /dev/null ; then
+                gem install ${1}
+            else
+                return 1
+            fi
+        ;;
+        fedora)
+            if command -v gem 2> /dev/null ; then
+                gem install ${1}
+            else
+                return 1
+            fi
+        ;;
+        pisi)
+            # Yetersiz kaynak olduğu için bu arkadaşı şu anlık desteklemiyoruz.
+            echo "sorry to say but we are not support pisi linux in this time."
+        ;;
+        opensuse)
+            # leap ağırlıklı lakin paket isimleri genelde aynı olur ileride ekleme gelecektir.
+            if command -v gem 2> /dev/null ; then
+                gem install ${1}
+            else
+                return 1
+            fi
+        ;;
+    esac
 }

@@ -4,7 +4,7 @@ install:
 	cp ./repositories.yaml /usr/share/hera
 	install -m 755 ./init.sh /usr/share/hera
 	install -m 755 ./hera.sh /usr/bin/hera
-	chmod +x 755 /usr/share/hera/*
+	chmod +x /usr/share/hera/*
 	@echo "packages.btb could not creating with make rules please run '~# hera --fix'"
 
 uninstall:
@@ -17,5 +17,5 @@ reinstall:
 	cp ./repositories.yaml /usr/share/hera
 	install -m 755 ./init.sh /usr/share/hera
 	install -m 755 ./hera.sh /usr/bin/hera
-	chmod +x 755 /usr/share/hera/*
+	chmod +x /usr/share/hera/*
 	@echo "packages.btb could not creating with make rules please run '~# hera --fix'"

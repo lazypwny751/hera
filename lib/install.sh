@@ -2,6 +2,21 @@
 
 # yamlparser.sh, colorsh, osutils, banners, core and tuiutils libs required must be sourced
 
+install:resolvosdep() {
+    if yaml:parse2bash:3 "/${temp}/package.yaml" | grep "$(osutil:define --base)" &> /dev/null ; then    
+        osutil:install "$(yaml:parse2bash:3 "/${temp}/package.yaml" | grep "$(osutil:define --base)" | tr "=" " " | tr -d '"' | awk '{print $2}')" || return 1
+    fi
+
+    if yaml:parse2bash:3 "/${temp}/package.yaml" | grep "python3_depends" &> /dev/null ; then    
+        osutil:pip3 "$(yaml:parse2bash:3 "/${temp}/package.yaml" | grep "python3_depends" | tr "=" " " | tr -d '"' | awk '{print $2}')" || return 1
+    fi
+
+    if yaml:parse2bash:3 "/${temp}/package.yaml" | grep "ruby_depends" &> /dev/null ; then    
+        osutil:gem "$(yaml:parse2bash:3 "/${temp}/package.yaml" | grep "ruby_depends" | tr "=" " " | tr -d '"' | awk '{print $2}')" || return 1
+    fi
+    return 0
+}
+
 install:package() {
     # ++++++++++[>+>+++>+++++++>++++++++++<<<<-]>>>>++++++++++++++++.------------.+.++++++++++.<<++.>>----------------.++++++++++++.-----------.+.<<.>>++++.++++++++++.<<.>>---.-.++++++++.------------------.+++++++++++++.-------------.-.<<.>>--.+++++++++++++++++++++++.<<.>>-----------------------.++++++++++++++++.-----------------.++++++++.+++++.--------.+++++++++++++++.------------------.++++++++.
     
@@ -13,7 +28,6 @@ install:package() {
         local debian_depends=""
         local arch_depends=""
         local fedora_depends=""
-        local pisi_depends=""
         local opensuse_depends=""
 
         cp "${1}" "${temp}" 2> /dev/null
@@ -33,8 +47,9 @@ install:package() {
                             cd "${temp}/OLDMAKEFILE"
                             make uninstall
                             btb:remove --base "${home}/${btb}" "${package}"
+                            install:resolvosdep || { tuiutil:notices --error "some os dependcies found but could not installed" || return 1 ; }
                             cd "${temp}"
-                            make install || tuiutil:notices --error "Make program failed installation canceled"
+                            make install || { tuiutil:notices --error "Make program failed installation canceled" || return ; }
                             btb:generate --base "${home}/${btb}" "${package}"
                             btb:write --write "${home}/${btb}" "${package}" "version" "${version}"
                             btb:write --write "${home}/${btb}" "${package}" "makecodec" "$(cat "${temp}/Makefile" | base64)"
@@ -42,8 +57,9 @@ install:package() {
                             tuiutil:notices --info "${package} is already installed with newest version with $(btb:print --print "${home}/${btb}" "${package}" "version")"
                         fi
                     else
+                        install:resolvosdep || { tuiutil:notices --error "some os dependcies found but could not installed" || return 1 ; }
                         cd "${temp}"
-                        make install || tuiutil:notices --error "Make program failed installation canceled"
+                        make install || { tuiutil:notices --error "Make program failed installation canceled" || return 1 ; }
                         btb:generate --base "${home}/${btb}" "${package}"
                         btb:write --write "${home}/${btb}" "${package}" "version" "${version}"
                         btb:write --write "${home}/${btb}" "${package}" "makecodec" "$(cat "${temp}/Makefile" | base64)"
