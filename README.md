@@ -1,5 +1,7 @@
 # hera
-alternative package manager written in bash 5.0.17 
+alternative package manager written in bash 5.0.17
+
+developed for bychan multi tool 
 
 # installation
 ```
