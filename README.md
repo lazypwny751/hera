@@ -1,7 +1,7 @@
 # hera
 alternative package manager written in bash 5.0.17
 
-developed for bychan multi tool 
+developed for [bychan multi tool](https://github.com/ByCh4n/BCHackTool) 
 
 # installation
 ```
