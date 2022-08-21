@@ -1,21 +1,21 @@
+PREFIX  = /usr
+HOMEDIR = $(PREFIX)/share/hera
+LIBDIR  = $(HOMEDIR)/lib
+
 install:
-	mkdir -p /usr/share/hera/lib /usr/share/hera/repositories /usr/share/licenses/hera /usr/share/doc/hera
-	install -m 755 ./lib/*.sh /usr/share/hera/lib
-	cp ./repositories.yaml /usr/share/hera
-	install -m 755 ./init.sh /usr/share/hera
-	install -m 755 ./hera.sh /usr/bin/hera
-	chmod +x /usr/share/hera/*
-	@echo "packages.btb could not creating with make rules please run '~# hera --fix'"
+	bash install-requirements.sh
+	mkdir -p $(LIBDIR)
+	cp ./lib/*.sh $(LIBDIR)
+	cp ./etc/herapkg.conf /etc/herapkg.conf
+	install -m 755 ./src/hera.sh $(PREFIX)/bin/hera
 
 uninstall:
-	rm -rf /usr/share/hera /usr/share/licenses/hera /usr/share/doc/hera /usr/bin/hera
+	rm -rf $(HOMEDIR) $(PREFIX)/bin/hera /etc/herapkg.conf
 
 reinstall:
-	rm -rf /usr/share/hera /usr/share/licenses/hera /usr/share/doc/hera /usr/bin/hera
-	mkdir -p /usr/share/hera/lib /usr/share/hera/repositories /usr/share/licenses/hera /usr/share/doc/hera
-	install -m 755 ./lib/*.sh /usr/share/hera/lib
-	cp ./repositories.yaml /usr/share/hera
-	install -m 755 ./init.sh /usr/share/hera
-	install -m 755 ./hera.sh /usr/bin/hera
-	chmod +x /usr/share/hera/*
-	@echo "packages.btb could not creating with make rules please run '~# hera --fix'"
+	rm -rf $(HOMEDIR) $(PREFIX)/bin/hera /etc/herapkg.conf
+	bash install-requirements.sh
+	mkdir -p $(LIBDIR)
+	cp ./lib/*.sh $(LIBDIR)
+	cp ./etc/herapkg.conf /etc/herapkg.conf
+	install -m 755 ./src/hera.sh $(PREFIX)/bin/hera

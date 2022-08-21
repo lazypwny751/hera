@@ -1,80 +1,100 @@
 #!/bin/bash
 
-# yamlparser.sh, colorsh, osutils, banners, core and tuiutils libs required must be sourced
+# opshelper.sh and stringçsh must be sourced.
 
 packing:build() {
-    local package=""
-    local version=""
-    local maintainer=""
-    local description=""
-    local debian_depends=""
-    local arch_depends=""
-    local fedora_depends=""
-    local pisi_depends=""
-    local opensuse_depends=""
-    
-    if [[ -f "${1}/package.yaml" ]] && [[ -f "${1}/Makefile" ]] ; then
-        if cat "${1}/Makefile" | grep "install:" &> /dev/null ; then
-            if cat "${1}/Makefile" | grep "uninstall:" &> /dev/null ; then
-                if cat "${1}/package.yaml" | grep "package:" &> /dev/null ; then
-                    if cat "${1}/package.yaml" | grep "version:" &> /dev/null ; then
-                        yaml:parse2bash:3 "${1}/package.yaml" > "${temp}/package.sh"
-                        . "${temp}/package.sh"
-                        if [[ -n "${package}" ]] && [[ ! "${package}"  =~ ['!@#$%^&*()_+']  ]] && [[ ! "${package}" = *" "* ]] ; then
-                            if [[ -n "${version}" ]] && [[ "${version}" =~ ^[0-9]+([.][0-9]+)+([.][0-9]+)?$ ]] ; then
-                                if [[ -n "${is_arch}" ]] ; then
-                                    tuiutil:notices --info "this package support ${is_arch} architecture machines"
-                                fi
+    local i="" list="" metafile="package.sh" status="true"
+    # Required variables
+    local package="" version="" maintainer="" entity=() processor=() distro=()
 
-                                if [[ -n "${debian_depends_1}" ]] ; then
-                                    tuiutil:notices --info "debian dependencities found"
-                                fi
+    # Optional variables
+    local description="" require_debian="" require_arch="" require_opensuse="" require=""
 
-                                if [[ -n "${arch_depends_1}" ]] ; then
-                                    tuiutil:notices --info "arch dependencities found"
-                                fi
+    if [[ -d "${1}" ]] ; then
+        if [[ -f "${1}/${metafile}" ]] ; then
+            source "${1}/${metafile}" && {
+                # Requirements
+                if [[ ! -n "${package}" ]] || ! string:allow "${package}" ; then
+                    echo -e "${green}${BASH_SOURCE[0]##*/}${reset}: ${red}${FUNCNAME##*:}${reset}: 'package: ${package}' contains unsupported characters."
+                    local status="false"
+                fi
 
-                                if [[ -n "${fedora_depends_1}" ]] ; then
-                                    tuiutil:notices --info "fedora dependencities found"
-                                fi
+                if ! [[ "$(string:str2int "${version}")" -gt "0" ]] &> /dev/null ; then
+                    echo -e "${green}${BASH_SOURCE[0]##*/}${reset}: ${red}${FUNCNAME##*:}${reset}: 'version: ${version}' contains unsupported characters."
+                    local status="false"
+                fi
 
-                                if [[ -n "${pisi_depends_1}" ]] ; then
-                                    tuiutil:notices --info "pisi dependencities found"
-                                fi
+                if [[ -z "${entity[@]}" ]] ; then
+                    echo -e "${green}${BASH_SOURCE[0]##*/}${reset}: ${red}${FUNCNAME##*:}${reset}: entities aren't defined."
+                    local status="false"
+                fi
 
-                                if [[ -n "${opensuse_depends_1}" ]] ; then
-                                    tuiutil:notices --info "openSUSE dependencities found"
-                                fi
-                                
-                                if [[ -n "${python3_1}" ]] ; then
-                                    tuiutil:notices --info "python3 dependencities found"
-                                fi
+                if [[ "$(type -t build)" != "function" ]] &> /dev/null ; then
+                    echo -e "${green}${BASH_SOURCE[0]##*/}${reset}: ${red}${FUNCNAME##*:}${reset}: function 'build' not found."
+                    local status="false"
+                fi
 
-                                if [[ -n "${ruby_1}" ]] ; then
-                                    tuiutil:notices --info "ruby dependencities found"
-                                fi
+                # Optionals
 
-                                cd "${1}"
-                                tar -zcf "${cwd}/${package}-${version}.hera" ./* && tuiutil:notices --succsess "${package} builded as ${cwd}/${package}-${version}.hera"
-                            else
-                                tuiutil:notices --error "version content must be like a '1.0.0'" || return 1
-                            fi
-                        else
-                            tuiutil:notices --error "package content cannot contain special characters and spaces" || return 1
-                        fi
-                    else
-                        tuiutil:notices --error "package.yaml found but 'version' content not found" || return 1
+                # dependencies
+                if [[ -n "${processor[@]}" ]] ; then
+                    echo -e "\t${Bgreen}==>${reset} this package can be installed on those that support '${processor[@]}' machines."
+                fi
+
+                if [[ -n "${distro[@]}" ]] ; then
+                    echo -e "\t${Bgreen}==>${reset} this package can be installed on the following distributions '${distro[@]}'."
+                fi
+
+                if [[ -n "${require_termux[@]}" ]] ; then
+                    echo -e "\t${Bgreen}==>${reset} there is '${#require_termux[@]}' Termux(pkg/apt) packages."
+                fi
+
+                if [[ -n "${require_debian[@]}" ]] ; then
+                    echo -e "\t${Bgreen}==>${reset} there is '${#require_debian[@]}' Debian(dpkg) packages."
+                fi
+
+                if [[ -n "${require_arch[@]}" ]] ; then
+                    echo -e "\t${Bgreen}==>${reset} there is '${#require_arch[@]}' Arch(abs/pacman) packages."
+                fi
+
+                if [[ -n "${require_opensuse[@]}" ]] ; then
+                    echo -e "\t${Bgreen}==>${reset} there is '${#require_opensuse[@]}' OpenSUSE(rpm/zypper) packages."
+                fi
+
+                # beforeinst&afterinst
+                for list in "termux" "debian" "arch" "opensuse" ; do
+                    if [[ -f "${1}/beforeinst-${list}.sh" ]] ; then
+                        echo -e ""
+                    elif [[ ]]
                     fi
+                done
+
+                # Building binary
+                if [[ "${status}" = "true" ]] ; then
+                    (
+                        cd "${1}" || return 1
+                        
+
+                    ) 2> /dev/null || {
+                        local status="false"
+                    }
+                fi
+
+                if [[ "${status}" = "false" ]] ; then
+                    return 1
                 else
-                    tuiutil:notices --error "package.yaml found but the 'package' content not found" || return 1
-                fi        
-            else
-                tuiutil:notices --error "Makefile found but the 'uninstall' content not defined" || return 1
-            fi
+                    return 0
+                fi
+            } || {
+                echo -e "${green}${BASH_SOURCE[0]##*/}${reset}: ${red}${FUNCNAME##*:}${reset}: metafile not configured correctly!"
+                return 3
+            }
         else
-            tuiutil:notices --error "Makefile found but the 'install' content not defined" || return 1
+            echo -e "${green}${BASH_SOURCE[0]##*/}${reset}: ${red}${FUNCNAME##*:}${reset}: '${metafile}' not found in ${1##*/}."
+            return 2
         fi
     else
-        tuiutil:notices --error "package.yaml or Makefile not found" || return 1
+        echo -e "${green}${BASH_SOURCE[0]##*/}${reset}: ${red}${FUNCNAME##*:}${reset}: package directory not found."
+        return 1
     fi
 }
