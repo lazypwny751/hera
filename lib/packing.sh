@@ -38,44 +38,51 @@ packing:build() {
 
                 # dependencies
                 if [[ -n "${processor[@]}" ]] ; then
-                    echo -e "\t${Bgreen}==>${reset} this package can be installed on those that support '${processor[@]}' machines."
+                    echo -e "\t${blue}==>${reset} this package can be installed on those that support '${processor[@]}' machines."
                 fi
 
                 if [[ -n "${distro[@]}" ]] ; then
-                    echo -e "\t${Bgreen}==>${reset} this package can be installed on the following distributions '${distro[@]}'."
+                    echo -e "\t${blue}==>${reset} this package can be installed on the following distributions '${distro[@]}'."
                 fi
 
                 if [[ -n "${require_termux[@]}" ]] ; then
-                    echo -e "\t${Bgreen}==>${reset} there is '${#require_termux[@]}' Termux(pkg/apt) packages."
+                    echo -e "\t${blue}==>${reset} there is '${#require_termux[@]}' Termux(pkg/apt) packages."
                 fi
 
                 if [[ -n "${require_debian[@]}" ]] ; then
-                    echo -e "\t${Bgreen}==>${reset} there is '${#require_debian[@]}' Debian(dpkg) packages."
+                    echo -e "\t${blue}==>${reset} there is '${#require_debian[@]}' Debian(dpkg) packages."
                 fi
 
                 if [[ -n "${require_arch[@]}" ]] ; then
-                    echo -e "\t${Bgreen}==>${reset} there is '${#require_arch[@]}' Arch(abs/pacman) packages."
+                    echo -e "\t${blue}==>${reset} there is '${#require_arch[@]}' Arch(abs/pacman) packages."
                 fi
 
                 if [[ -n "${require_opensuse[@]}" ]] ; then
-                    echo -e "\t${Bgreen}==>${reset} there is '${#require_opensuse[@]}' OpenSUSE(rpm/zypper) packages."
+                    echo -e "\t${blue}==>${reset} there is '${#require_opensuse[@]}' OpenSUSE(rpm/zypper) packages."
                 fi
 
                 # beforeinst&afterinst
                 for list in "termux" "debian" "arch" "opensuse" ; do
                     if [[ -f "${1}/beforeinst-${list}.sh" ]] ; then
-                        echo -e ""
-                    elif [[ ]]
+                        echo -e "\t${blue}==>${reset} beforeinst-${list}.sh found.."
+                    fi
+
+                    if [[ -f "${1}/afterinst-${list}.sh" ]] ; then
+                        echo -e "\t${blue}==>${reset} afterinst-${list}.sh found.."
                     fi
                 done
 
                 # Building binary
                 if [[ "${status}" = "true" ]] ; then
                     (
+                        echo -e "\t${Bblue}==>${reset} files are being archived.."
                         cd "${1}" || return 1
-                        
-
-                    ) 2> /dev/null || {
+                        find . | cpio -o > "${CWD}/${package}-${version}.cpio" || return 2
+                    ) 2> /dev/null && {
+                        export SHARED="${CWD}/${package}-${version}.cpio"
+                        echo -e "\t${Bgreen}==>${reset} files have been successfully archived."
+                    } || {
+                        echo -e "\t${Bred}==>${reset} Error encountered while processing files."
                         local status="false"
                     }
                 fi

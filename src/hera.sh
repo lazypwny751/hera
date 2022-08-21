@@ -135,7 +135,7 @@ case "${DO}" in
                 echo -ne "[${Bwhite}${COUNTER}${reset}] "
                 string:stdoutput --info "looking for ${opt##*/}."
                 packing:build "${opt}" && { 
-                    string:stdoutput --success "the package builded successfully at ${CWD}/${SHARED}"
+                    string:stdoutput --success "the package builded successfully at '${SHARED}'"
                 } || {
                     string:stdoutput --error "${opt##*/} could not be built correctly"
                     export status="false"
