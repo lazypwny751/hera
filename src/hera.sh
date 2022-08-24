@@ -17,11 +17,17 @@
 #    along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 # TODO:
-#   Multi compression comptability for packages.
-#   Optimize the code.
+#   - Multi compression comptability for packages.
+#   - Optimize the code.
+#   - Add logger.
+#   - Really librarize the full project (but like hera 3).
+#   - Protect the configuration files.
 
 # BUGS:
 #   No known bugs.
+
+# TRICK:
+# grep -n "## !LOOK HERE!" <any hera file>
 
 if [[ "${PATH}" = *com.termux* ]] ; then
     export root="/data/data/com.termux/files"
@@ -110,6 +116,22 @@ while [[ "${#}" -gt 0 ]] ; do
                 esac
             done
         ;;
+        --[iI][nN][sS][tT][aA][lL][lL]|-[iI])
+            shift
+            export DO="install"
+
+            while [[ "${#}" -gt 0 ]] ; do
+                case "${1}" in
+                    --*|-*)
+                        break
+                    ;;
+                    *)
+                        export INSTOPT+=("${1}")
+                        shift
+                    ;;
+                esac
+            done
+        ;;
         --[mM][oO][oO]|-[mM])
             shift
             export DO="cow"
@@ -128,7 +150,7 @@ case "${DO}" in
     build)
         export SHARED="" COUNTER="1"
 
-        if [[ "${#BUILDOPT[@]}" -ge 1 ]] && opshelper:check --command "cpio" "find" ; then
+        if [[ "${#BUILDOPT[@]}" -ge 1 ]] && opshelper:check --command "cpio" "find" "mkdir" ; then
             hera:source "packing"
 
             for opt in ${BUILDOPT[@]} ; do
@@ -143,6 +165,31 @@ case "${DO}" in
                 export COUNTER="$(( COUNTER + 1 ))"
             done
         elif [[ "${#BUILDOPT[@]}" -lt 1 ]] ; then
+            string:stdoutput --error "insufficient argument"
+            export status="false"
+        else
+            export status="false"
+        fi
+    ;;
+    install)
+        export COUNTER="1"
+
+        if [[ "${#INSTOPT}" -ge 1 ]] && opshelper:check --command "cpio" ; then
+            hera:source "packing"
+
+            for opt in ${INSTOPT[@]} ; do
+                # is file
+                if [[ -f "${opt}" ]] ; then
+                    packing:install "${opt}" && {
+                        :
+                    } || {
+                        local status="false"
+                    }
+                else
+                    : # is this a package? is realy in repo?
+                fi
+            done
+        elif [[ "${#INSTOPT[@]}" -lt 1 ]] ; then
             string:stdoutput --error "insufficient argument"
             export status="false"
         else

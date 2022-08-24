@@ -1,15 +1,22 @@
 #!/bin/bash
 
-# opshelper.sh and stringçsh must be sourced.
+# opshelper.sh and string.sh must be sourced.
 
 packing:build() {
+    # package.sh -> here: check if that options are met -> cpio archive
+
     local i="" list="" metafile="package.sh" status="true"
+
     # Required variables
     local package="" version="" maintainer="" entity=() processor=() distro=()
 
     # Optional variables
-    local description="" require_debian="" require_arch="" require_opensuse="" require=""
+    local require_debian="" require_arch="" require_opensuse="" require=""
 
+    ## !LOOK HERE!
+    # burada paket hazırlayan kişinin girdiği verileri dosyalar şeklinde ayırmalı mıyım?
+    # eğer öyleyse neden öyle yapmalıyım yine de aynı kapıya çıkmayacak mı?, hem diğer türlü
+    # kullanıcıyı kısıtlamış bulunmaz mıyım.
     if [[ -d "${1}" ]] ; then
         if [[ -f "${1}/${metafile}" ]] ; then
             source "${1}/${metafile}" && {
@@ -35,7 +42,6 @@ packing:build() {
                 fi
 
                 # Optionals
-
                 # dependencies
                 if [[ -n "${processor[@]}" ]] ; then
                     echo -e "\t${blue}==>${reset} this package can be installed on those that support '${processor[@]}' machines."
@@ -43,6 +49,10 @@ packing:build() {
 
                 if [[ -n "${distro[@]}" ]] ; then
                     echo -e "\t${blue}==>${reset} this package can be installed on the following distributions '${distro[@]}'."
+                fi
+
+                if [[ -n "${require}" ]] ; then
+                    echo -e "\t${blue}==>${reset} there is '${#require[@]}' Hera(self) packages."
                 fi
 
                 if [[ -n "${require_termux[@]}" ]] ; then
@@ -102,6 +112,35 @@ packing:build() {
         fi
     else
         echo -e "${green}${BASH_SOURCE[0]##*/}${reset}: ${red}${FUNCNAME##*:}${reset}: package directory not found."
+        return 1
+    fi
+}
+
+packing:install() {
+    # cpio archive -> hera: check if the options are met -> system -> etities are goes hera's key value storage archives 
+
+    local i="" list="" metafile="package.sh" status="true"
+
+    # Required variables
+    local package="" version="" maintainer="" entity=() processor=() distro=()
+
+    # Optional variables
+    local require_debian="" require_arch="" require_opensuse="" require=""
+
+    if file "${1}" | grep grep -w "cpio archive" &> /dev/null ; then
+        # set up temp dir
+        # copy the archive
+        # open the archive
+        # source the package.sh
+        # check requiremets
+        # get optional dependencies and run beforeinst files
+        # run the build function
+        # save  the meta daata from key value based store
+        # remove temp dir
+        # NOT: during this process generate lock file and do not allow run this function multiple
+        :
+    else
+        echo -e ""
         return 1
     fi
 }
