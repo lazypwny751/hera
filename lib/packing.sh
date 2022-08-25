@@ -129,18 +129,25 @@ packing:install() {
 
     if file "${1}" | grep grep -w "cpio archive" &> /dev/null ; then
         # set up temp dir
+        local tempdir="$(opshelper:temp -d)"
+        # generate the lock file
+        echo "SETPID='${SETPID}'" > "${TMP}/heralock.sh"
         # copy the archive
-        # open the archive
-        # source the package.sh
-        # check requiremets
-        # get optional dependencies and run beforeinst files
-        # run the build function
-        # save  the meta daata from key value based store
-        # remove temp dir
-        # NOT: during this process generate lock file and do not allow run this function multiple
-        :
+        cp -r "${1}" "${tempdir}"
+        (
+            cd "${tempdir}"
+            # open the archive
+            # source the package.sh
+            # check requiremets
+            # get optional dependencies and run beforeinst files
+            # run the build function
+        ) && {
+            # save  the meta daata from key value based store
+            # remove temp dir
+            :
+        }
     else
-        echo -e ""
+        echo -e "${green}${BASH_SOURCE[0]##*/}${reset}: ${red}${FUNCNAME##*:}${reset}: there is no cpio archive."
         return 1
     fi
 }

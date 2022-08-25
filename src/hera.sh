@@ -37,7 +37,7 @@ fi
 
 export version="2.0.0" 
 export DO="nothing" status="true" 
-export CWD="${PWD}" SUSER="${SUDO_USER:-$USER}"
+export CWD="${PWD}" TMP="${root}/tmp" SETPID="${$}" SUSER="${SUDO_USER:-$USER}"
 export BUILDOPT=() INSTOPT=() UNINSTOPT=() GETOPT=()
 export conf="${root}/etc/herapkg.conf" libd="${root}/usr/share/hera/lib"
 export librequire=(
